@@ -10,7 +10,10 @@ foreach(glob('upload/'.$_REQUEST['id'].'/comments/*') as $file) {
 rmdir('upload/'.$_REQUEST['id'].'/comments');
 
 foreach(glob('upload/'.$_REQUEST['id'].'/defects/*') as $file) {
-	unlink($file);
+	foreach(glob($file.'/*') as $defectfile) {
+                unlink($defectfile);
+        }
+        rmdir($file);
 }
 rmdir('upload/'.$_REQUEST['id'].'/defects');
 

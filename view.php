@@ -25,13 +25,13 @@ $id = $_REQUEST['id'];
 	viewer.setParameter('ModelColor', '#CAA618');
 	viewer.setParameter('BackgroundColor1', '#ffffff');
 	viewer.setParameter('BackgroundColor2', '#ffffff');
-	viewer.setParameter('RenderMode', 'textureflat');
+	viewer.setParameter('RenderMode', 'wireframe');
 	viewer.setParameter('MipMapping', 'on');
 	viewer.setParameter('Renderer', 'webgl');
 	viewer.init();
 	viewer.update();
-	function submitcomment() {
-		var thehidden = document.getElementById("commentmatrix");
+	function submitmatrix(fvsElement) {
+		var thehidden = document.getElementById(fvsElement);
 		thehidden.value = JSON.stringify(viewer.rotMatrix);
 	}
 	function setRotation(obj) {
@@ -77,7 +77,7 @@ State:
         }
 ?>
 </table>
-<form method="post" action="comment.php" onsubmit="submitcomment()">
+<form method="post" action="comment.php" onsubmit="submitmatrix('commentmatrix')">
 <input type=hidden name="postid" value="<?php echo $id; ?>" />
 <input type=hidden name="commentmatrix" id="commentmatrix" value="" />
 Comment: <input type="text" name="comment" /> <input type="submit" />
@@ -86,13 +86,15 @@ Comment: <input type="text" name="comment" /> <input type="submit" />
 <table border="1">
 <?php
 	foreach(glob('upload/'.$id.'/defects/*') as $file) {
-		$tvsDefect = file_get_contents($file);
-		echo "<tr><td>".$tvsDefect."</td></tr>";
+		$tvsDefect = file_get_contents($file."/defect.txt");
+		$tvsDefectMatrix = file_get_contents($file."/defectmatrix.txt");
+		echo "<tr><td><a href='#' onclick='setRotation(".$tvsDefectMatrix.")'>".$tvsDefect."</a></td></tr>";
 	}
 ?>
 </table>
-<form method="post" action="defect.php">
+<form method="post" action="defect.php" onsubmit="submitmatrix('defectmatrix')">
 <input type=hidden name="postid" value="<?php echo $id; ?>" />
+<input type=hidden name="defectmatrix" id="defectmatrix" value="" />
 Defect: <input type="text" name="defect" /> <input type="submit" />
 </form>
 <a href="listusers.php?target=<?php echo $id; ?>&action=reviewers">Add Reviewer</a>
