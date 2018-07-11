@@ -7,8 +7,17 @@ require_once("session_mgmt.php");
 <table>
 
 <?php
-
+	$ismine = false;
 	foreach(glob('upload/*') as $file) {
+		foreach(glob($file.'/reviewers/*') as $filereviewers) {
+			$fileparts = explode('/', $filereviewers);
+               		$username = array_reverse($fileparts)[0];
+ 			if ($_SESSION['username'] == $username) {
+					$ismine = true;
+                                        break;
+			}
+		}
+		if ($ismine) {
 		$filefront = explode('/', $file)[1];
 		$commentcount=0;
 		$defectcount=0;
@@ -24,6 +33,7 @@ require_once("session_mgmt.php");
                 	break;
         	}
 		echo "<tr><td><a href='view.php?id=".$filefront."'>view</a></td><td><a href='delete.php?id=".$filefront."'>delete</a></td><td>Comments: ".$commentcount."</td><td>Defects: ".$defectcount."</td><td>State: ".$tvsState."</td></tr>";
+	}
         }
 ?>
 </table>

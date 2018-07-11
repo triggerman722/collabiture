@@ -87,15 +87,26 @@ Comment: <input type="text" name="comment" /> <input type="submit" />
 <?php
 	foreach(glob('upload/'.$id.'/defects/*') as $file) {
 		$tvsDefect = file_get_contents($file."/defect.txt");
+		$tvsSeverity = file_get_contents($file."/severity.txt");
 		$tvsDefectMatrix = file_get_contents($file."/defectmatrix.txt");
-		echo "<tr><td><a href='#' onclick='setRotation(".$tvsDefectMatrix.")'>".$tvsDefect."</a></td></tr>";
+		echo "<tr><td><a href='#' onclick='setRotation(".$tvsDefectMatrix.")'>".$tvsDefect."</a></td><td>".$tvsSeverity."</td></tr>";
 	}
 ?>
 </table>
 <form method="post" action="defect.php" onsubmit="submitmatrix('defectmatrix')">
 <input type=hidden name="postid" value="<?php echo $id; ?>" />
 <input type=hidden name="defectmatrix" id="defectmatrix" value="" />
-Defect: <input type="text" name="defect" /> <input type="submit" />
+Defect: <input type="text" name="defect" /> 
+Severity:
+<select name="severity">
+<?php
+        foreach(glob('admin/severities/*') as $file) {
+                $tvsState = explode('.', array_reverse(explode('/', $file))[0])[0];
+                echo "<option value='".$tvsState."'>".$tvsState."</option>";
+        }
+?>
+</select>
+<input type="submit" />
 </form>
 <a href="listusers.php?target=<?php echo $id; ?>&action=reviewers">Add Reviewer</a>
 <hr />
