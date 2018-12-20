@@ -4,6 +4,7 @@
 	$username = $_REQUEST['username'];
 	$password = $_REQUEST['password'];
 
+	//get the encrypted password.
 	$crypted = file_get_contents('./usr/'.$username.'/password.txt');
 
 	if (password_verify($password, $crypted))
